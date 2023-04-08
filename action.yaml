@@ -1,0 +1,20 @@
+name: Populate teams and collaborators to Port
+description: Populates a list of collaborators and teams for a GitHub repository
+author: port-labs
+inputs:
+  token:
+    description: 'The GitHub Token to use to authenticate with the API'
+    required: true
+  portClientId:
+    description: 'The Port Client ID to use to authenticate with the API'
+    required: true
+  portClientSecret:
+    description: 'The Port Client Secret to use to authenticate with the API'
+    required: true
+  blueprintIdentifier:
+    description: 'The blueprint identifier to use to populate the Port'
+    required: true
+    default: 'Service'
+runs:
+  using: docker
+  image: Dockerfile
