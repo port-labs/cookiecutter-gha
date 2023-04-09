@@ -47,6 +47,8 @@ echo "$port_user_inputs" | grep -o "cookie_cutter[^ ]*" | sed 's/cookie_cutter//
 
 cookiecutter $cookie_cutter_template --no-input
 
+ls -l 
+
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
   --header "Content-Type: application/json" \
