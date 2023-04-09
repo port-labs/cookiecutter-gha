@@ -59,9 +59,9 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
 cd "$(ls -td -- */ | head -n 1)"
 
 git init
-git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
 git config user.name "GitHub Actions Bot"
 git config user.email "github-actions[bot]@users.noreply.github.com"
+git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
 git add .
 git commit -m "Initial commit after scaffolding"
 git push
