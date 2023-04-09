@@ -6,6 +6,8 @@
 
 This GitHub action allows you to quickly scaffold repositories using any selected [Cookiecutter Template](https://www.cookiecutter.io/templates) via Port Actions.
 
+In addition, as cookiecutter is an Open Source project you can make your own project, learn more about it [here](https://cookiecutter.readthedocs.io/en/2.0.2/tutorials.html#create-your-very-own-cookiecutter-project-template)
+
 ## Inputs
 
 | Input                 | Description                                                                                                                   | Required | Default   |
