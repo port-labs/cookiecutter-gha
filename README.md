@@ -135,7 +135,7 @@ jobs:
           organizationName: INSERT_ORG_NAME
 ```
 6. Trigger the action from Port UI.
-![image](https://user-images.githubusercontent.com/51213812/230772298-63f8dd94-3f6b-478c-9a24-5d4ecfe5e9b8.png)
+![gif](https://user-images.githubusercontent.com/51213812/230777057-081adf0c-f792-447e-bdec-35c99d73ba02.gif)
 
 ## Connecting Port's GitHub exporter
 
