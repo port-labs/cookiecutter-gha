@@ -1,5 +1,5 @@
-name: GitHub action to create repositories templated with Cookiecutter with Port integration
-description: Populates a list of collaborators and teams for a GitHub repository
+name: Port Cookiecutter Action
+description: GitHub action to create repositories templated with Cookiecutter with Port integration
 author: port-labs
 inputs:
   token:
