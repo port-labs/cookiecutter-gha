@@ -7,9 +7,7 @@ RUN apk update && \
     python3 \
     py3-pip \
     git \
-    && pip3 install --no-cache-dir cookiecutter \
-    && apk del py3-pip \
-    && rm -rf /var/cache/apk/*
+    && pip3 install cookiecutter && pip3 install six
 
 COPY entrypoint.sh /
 
