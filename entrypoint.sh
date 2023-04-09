@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 port_client_id="$INPUT_PORTCLIENTID"
 port_client_secret="$INPUT_PORTCLIENTSECRET"
 port_run_id="$INPUT_PORTRUNID"
@@ -44,11 +46,8 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   }"
 
 echo "$port_user_inputs" | grep -o "cookiecutter[^ ]*" | sed 's/cookiecutter//g' >> cookiecutter.json
-cat cookiecutter.json
 
 cookiecutter $cookie_cutter_template --no-input
-
-ls -l 
 
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
