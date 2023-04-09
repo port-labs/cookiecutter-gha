@@ -1,5 +1,5 @@
 # Use the Alpine Linux base image
-FROM alpine:latest
+FROM alpine:3.2
 
 RUN apk add --no-cache jq \
     curl \ 
