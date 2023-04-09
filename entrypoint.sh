@@ -2,7 +2,7 @@
 
 port_client_id="$INPUT_PORTCLIENTID"
 port_client_secret="$INPUT_PORTCLIENTSECRET"
-port_run_id="$INPUT_RUNID"
+port_run_id="$INPUT_PORTRUNID"
 github_token="$INPUT_TOKEN"
 blueprint_identifier="$INPUT_BLUEPRINTIDENTIFIER"
 repository_name="$INPUT_REPOSITORYNAME"
@@ -24,7 +24,7 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
 
 # Create a new repostiory in github
 curl -i -H "Authorization: token $github_token" \
-    -d "{ \
+     -d "{ \
         \"name\": \"$repository_name\", \"private\": true
       }" \
     https://api.github.com/orgs/$org_name/repos
