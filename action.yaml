@@ -1,6 +1,7 @@
 name: Port Cookiecutter Action
 description: GitHub action to create repositories templated with Cookiecutter with Port integration
 author: port-labs
+icon: https://uploads-ssl.webflow.com/622996415264e2107087774c/62299d67eda43ff64a5c45cd_logo.svg
 inputs:
   token:
     description: 'The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization (supporting only PATs at this time)'
