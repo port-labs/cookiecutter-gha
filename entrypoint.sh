@@ -12,6 +12,22 @@ org_name="$INPUT_ORGANIZATIONNAME"
 cookie_cutter_template="$INPUT_COOKIECUTTERTEMPLATE"
 port_user_inputs="$INPUT_PORTUSERINPUTS"
 
+trap "echo 'Exiting script...'; exit_status=\$?; report_failure; exit \$exit_status" EXIT
+
+report_failure() {
+    access_token=$(curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
+        \"clientId\": \"$port_client_id\",
+        \"clientSecret\": \"$port_client_secret\"
+    }" | jq -r '.accessToken')
+
+    curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
+      --header "Authorization: Bearer $access_token" \
+      --header "Content-Type: application/json" \
+      --data "{
+        \"message\": \"FATAL: something went wrong while executing the GitHub Action exiting ❌\"
+      }"
+}
+
 access_token=$(curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
     \"clientId\": \"$port_client_id\",
     \"clientSecret\": \"$port_client_secret\"
