@@ -12,7 +12,7 @@ org_name="$INPUT_ORGANIZATIONNAME"
 cookie_cutter_template="$INPUT_COOKIECUTTERTEMPLATE"
 port_user_inputs="$INPUT_PORTUSERINPUTS"
 
-trap "echo 'Exiting script...'; exit_status=\$?; report_failure; exit \$exit_status" EXIT
+trap "echo 'Exiting script... \$?'; exit_status=\$?; report_failure; exit \$exit_status" EXIT
 
 report_failure() {
     access_token=$(curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
