@@ -29,7 +29,7 @@ Follow these steps to get started with the Golang template
 1. Create the following GitHub action secrets
 * `ORG_TOKEN` - a PAT (Personal Access Token) with permissions to create repositories
 * `PORT_CLIENT_ID` - Port Client ID [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token)
-* `PORT_CLIENT_SECRET` - Port CLient Secret [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token) 
+* `PORT_CLIENT_SECRET` - Port Client Secret [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token) 
 
 2. Install the Ports GitHub app from [here](https://github.com/apps/getport-io/installations/new).
 3. Create a blueprint at Port with the following properties:
