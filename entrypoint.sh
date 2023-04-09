@@ -43,7 +43,7 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
     \"message\": \"Starting templating with cookiecutter 🍪\"
   }"
 
-echo "$port_user_inputs" | grep -o "cookie_cutter[^ ]*" | sed 's/cookie_cutter//g' >> cookiecutter.json
+echo "$port_user_inputs" | grep -o "cookiecutter[^ ]*" | sed 's/cookiecutter//g' >> cookiecutter.json
 
 cookiecutter $cookie_cutter_template --no-input
 
@@ -87,6 +87,7 @@ curl --location "https://api.getport.io/v1/blueprints/$blueprint_identifier/enti
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
   --header "Content-Type: application/json" \
+  --header "User-Agent: github-action/v1.0" \
   --data "{
     \"message\": \"Finshed! visit https://github.com/$org_name/$repository_name 🏁✅\"
   }"
