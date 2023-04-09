@@ -27,6 +27,9 @@ inputs:
   portUserInputs:
     description: 'Port user inputs to came from triggering the action'
     required: true
+  portRunId:
+    description: 'Port run ID to came from triggering the action'
+    required: true
 runs:
   using: docker
   image: Dockerfile

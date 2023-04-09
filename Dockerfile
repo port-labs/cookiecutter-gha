@@ -6,6 +6,7 @@ RUN apk update && \
     curl \ 
     python3 \
     py3-pip \
+    git \
     && pip3 install --no-cache-dir cookiecutter \
     && apk del py3-pip \
     && rm -rf /var/cache/apk/*
