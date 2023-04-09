@@ -1,9 +1,9 @@
-name: Populate teams and collaborators to Port
+name: GitHub action to create repositories templated with Cookiecutter with Port integration
 description: Populates a list of collaborators and teams for a GitHub repository
 author: port-labs
 inputs:
   token:
-    description: 'The GitHub Token to use to authenticate with the API'
+    description: 'The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization (supporting only PATs at this time)'
     required: true
   portClientId:
     description: 'The Port Client ID to use to authenticate with the API'
@@ -15,6 +15,18 @@ inputs:
     description: 'The blueprint identifier to use to populate the Port'
     required: true
     default: 'Service'
+  repositoryName:
+    description: 'The name of the repository to create'
+    required: true
+  organizationName:
+    description: 'The name of the organization to create the repository in'
+    required: true
+  cookiecutterTemplate:
+    description: 'The cookiecutter template to use to populate the repository'
+    required: true
+  portUserInputs:
+    description: 'Port user inputs to came from triggering the action'
+    required: true
 runs:
   using: docker
   image: Dockerfile

@@ -1,9 +1,9 @@
 #!/bin/sh
 
-github_token="$INPUT_TOKEN"
 port_client_id="$INPUT_PORTCLIENTID"
 port_client_secret="$INPUT_PORTCLIENTSECRET"
 port_run_id="$INPUT_RUNID"
+github_token="$INPUT_TOKEN"
 blueprint_identifier="$INPUT_BLUEPRINTIDENTIFIER"
 repository_name="$INPUT_REPOSITORYNAME"
 org_name="$INPUT_ORGANIZATIONNAME"
@@ -33,7 +33,7 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
   --header "Content-Type: application/json" \
   --data "{
-    \"message\": \"Created a new repository at https://github.com/$org_name/$repository_name ✅\"
+    \"message\": \"Created a new repository at https://github.com/$org_name/$repository_name 🚀\"
   }"
 
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
@@ -47,7 +47,12 @@ echo "$port_user_inputs" | grep -o "cookie_cutter[^ ]*" | sed 's/cookie_cutter//
 
 cookiecutter $cookie_cutter_template --no-input
 
-# Switching directory to the newly created directory
+curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
+  --header "Authorization: Bearer $access_token" \
+  --header "Content-Type: application/json" \
+  --data "{
+    \"message\": \"Pushing the template into the repository ⬆️\"
+  }"
 
 cd "$(ls -td -- */ | head -n 1)"
 
@@ -59,12 +64,26 @@ git add .
 git commit -m "Initial commit after scaffolding"
 git push
 
+
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
   --header "Content-Type: application/json" \
   --data "{
-    \"message\": \"Starting templating with cookiecutter 🍪\"
+    \"message\": \"Reporting to Port the new entity created https://github.com/$org_name/$repository_name 🚢\"
+  }" 
+
+curl --location "https://api.getport.io/v1/blueprints/$blueprint_identifier/entities" \
+  --header "Authorization: Bearer $access_token" \
+  --header "Content-Type: application/json" \
+  --data "{
+    \"identifier\": \"$repository_name\",
+    \"title\": \"$repository_name\",
+    \"properties\": {}
   }"
 
-
-
+curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
+  --header "Authorization: Bearer $access_token" \
+  --header "Content-Type: application/json" \
+  --data "{
+    \"message\": \"Finshed! visit https://github.com/$org_name/$repository_name 🏁✅\"
+  }"
