@@ -58,24 +58,14 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
 
 cd "$(ls -td -- */ | head -n 1)"
 
-echo "Intializing git repository"
-git init
-
-echo "Configure git user"
 git config user.name "GitHub Actions Bot"
-
-echo "Configure git email"
 git config user.email "github-actions[bot]@users.noreply.github.com"
-
-echo "Adding remote origin"
-git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
-
-echo "Adding all files"
+git init
 git add .
 git commit -m "Initial commit after scaffolding"
-
-echo "Pushing to remote origin"
-git push
+git branch -M main
+git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
+git push -u origin main
 
 
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
@@ -85,7 +75,7 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
     \"message\": \"Reporting to Port the new entity created https://github.com/$org_name/$repository_name 🚢\"
   }" 
 
-curl --location "https://api.getport.io/v1/blueprints/$blueprint_identifier/entities" \
+curl --location "https://api.getport.io/v1/blueprints/$blueprint_identifier/entities?run_id=$port_run_id" \
   --header "Authorization: Bearer $access_token" \
   --header "Content-Type: application/json" \
   --data "{
