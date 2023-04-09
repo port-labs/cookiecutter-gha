@@ -4,7 +4,7 @@
 
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/devex-community/shared_invite/zt-1bmf5621e-GGfuJdMPK2D8UN58qL4E_g)
 
-This GitHub action allows you to quickly scaffold repositories using any selected Cookiecutter Template via Port Actions.
+This GitHub action allows you to quickly scaffold repositories using any selected [Cookiecutter Template](https://www.cookiecutter.io/templates) via Port Actions.
 
 ## Inputs
 
