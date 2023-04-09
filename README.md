@@ -1,46 +1,141 @@
 <img align="right" width="100" height="74" src="https://user-images.githubusercontent.com/8277210/183290025-d7b24277-dfb4-4ce1-bece-7fe0ecd5efd4.svg" />
 
-# Export teams and users of repository to Port
+# Scaffold Action
 
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/devex-community/shared_invite/zt-1bmf5621e-GGfuJdMPK2D8UN58qL4E_g)
 
-This action will fetch all the collaborators and teams of the repository and will do the following:
+This GitHub action allows you to quickly scaffold repositories using any selected Cookiecutter Template via Port Actions.
 
-* If the team does not exist in Port it will automatically create it and assign it to an entity with an identifier that equals to the repository name.
-* If a blueprint with the given identifier does not exist within Port, it will be created with the minimal required properties. If you already have a blueprint with the given Identifier, you can add the following property to the blueprint.
+## Inputs
 
-```json showLineNumbers
-"collaborators": {
-    "type": "array",
-    "title": "Collaborators",
-    "items": {
+| Input                 | Description                                                                                                                   | Required | Default   |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------------------|----------|-----------|
+| token                 | The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization (supporting only PATs at this time) | Yes      |           |
+| portClientId          | The Port Client ID to use to authenticate with the API                                                                        | Yes      |           |
+| portClientSecret      | The Port Client Secret to use to authenticate with the API                                                                    | Yes      |           |
+| blueprintIdentifier   | The blueprint identifier to use to populate the Port                                                                          | Yes      | Service   |
+| repositoryName        | The name of the repository to create                                                                                          | Yes      |           |
+| organizationName      | The name of the organization to create the repository in                                                                      | Yes      |           |
+| cookiecutterTemplate  | The cookiecutter template to use to populate the repository                                                                   | Yes      |           |
+| portUserInputs        | Port user inputs to came from triggering the action                                                                           | Yes      |           |
+| portRunId             | Port run ID to came from triggering the action                                                                                | Yes      |           |
+
+## Quickstart - Scaffold Golang Template
+
+Follow these steps to get started with the Golang template
+
+1. Create the following GitHub action secrets
+* `ORG_TOKEN` - a PAT (Personal Access Token) with permissions to create repositories
+* `PORT_CLIENT_ID` - Port Client ID [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token)
+* `PORT_CLIENT_SECRET` - Port CLient Secret [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token) 
+
+2. Install the Ports GitHub app from [here](https://github.com/apps/getport-io/installations/new).
+3. Create a blueprint at Port with the following properties:
+>**Note** Keep in mind this can be any blueprint you would like and this is just an example
+```json
+{
+  "identifier": "microservice",
+  "title": "Microservice",
+  "icon": "Microservice",
+  "schema": {
+    "properties": {
+      "description": {
+        "title": "Description",
+        "type": "string"
+      },
+      "url": {
+        "title": "URL",
+        "format": "url",
+        "type": "string"
+      },
+      "readme": {
+        "title": "README",
         "type": "string",
-        "format": "user"
-    }
+        "format": "markdown",
+        "icon": "Book"
+      }
+    },
+    "required": []
+  },
+  "mirrorProperties": {},
+  "calculationProperties": {},
+  "relations": {}
 }
 ```
 
-Example:
+4. Create an action at Port with the following JSON file:
+>**Note** Keep in mind that any field started with `cookiecutter` will automtically be injected into the cookiecutter inputs as a variable here for example we  are using the `cookiecutter_app_name` input of the [Golang Template](https://github.com/lacion/cookiecutter-golang)
 
-```yaml showLineNumbers
-  populate-teams:
+
+```json
+[
+  {
+    "identifier": "scaffold",
+    "title": "Scaffold Golang Microservice",
+    "icon": "Git",
+    "userInputs": {
+      "properties": {
+        "name": {
+          "title": "Repo Name",
+          "type": "string"
+        },
+        "cookiecutter_app_name": {
+          "type": "string",
+          "title": "Application Name"
+        }
+      },
+      "required": [
+        "name"
+      ]
+    },
+    "invocationMethod": {
+      "type": "GITHUB",
+      "org": "port-cookiecutter-example",
+      "repo": "gha-templater",
+      "workflow": "scaffold-golang.yml",
+      "omitUserInputs": true
+    },
+    "trigger": "CREATE",
+    "description": "Scaffolding a new Microservice from a set of templates using Cookiecutter"
+  }
+]
+```
+5. Create a workflow file under .github/workflows/scaffold-golang.yml with the following content:
+```yml
+on:
+  workflow_dispatch:
+    inputs:
+      port_payload:
+        required: true
+        description: "Port's payload, including details for who triggered the action and general context (blueprint, run id, etc...)"
+        type: string
+    secrets: 
+      ORG_TOKEN: 
+        required: true
+      PORT_CLIENT_ID:
+        required: true
+      PORT_CLIENT_SECRET:
+        required: true
+jobs: 
+  scaffold:
     runs-on: ubuntu-latest
     steps:
-      - name: Populate teams and users
-        uses: port-labs/github-teams-and-collaborators@v1
+      - uses: port-labs/cookiecutter-gha@v1
         with:
-          repo: ${{ github.repository }}
-          token: ${{ secrets.GIT_ADMIN_TOKEN }}
           portClientId: ${{ secrets.PORT_CLIENT_ID }}
           portClientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-          blueprintIdentifier: Service
+          token: ${{ secrets.ORG_TOKEN }}
+          portRunId: ${{ fromJson(inputs.port_payload).context.runId }}
+          repositoryName: ${{ fromJson(inputs.port_payload).payload.properties.name }}
+          portUserInputs: ${{ toJson(fromJson(inputs.port_payload).payload.properties) }} 
+          cookiecutterTemplate: https://github.com/lacion/cookiecutter-golang
+          blueprintIdentifier: 'microservice'
+          organizationName: INSERT_ORG_NAME
 ```
+6. Trigger the action from Port UI.
+![image](https://user-images.githubusercontent.com/51213812/230772298-63f8dd94-3f6b-478c-9a24-5d4ecfe5e9b8.png)
 
-Inputs:
-| Input | Description | Required | Default |
-| --- | --- | --- | --- |
-| `token` | The GitHub Token to use to authenticate with the API | `true` | N/A |
-| `repo` | The repository to get collaborators and teams for | `true` | N/A |
-| `portClientId` | The Port Client ID to use to authenticate with the API | `true` | N/A |
-| `portClientSecret` | The Port Client Secret to use to authenticate with the API | `true` | N/A |
-| `blueprintIdentifier` | The blueprint identifier to use to populate the Port | `true` | `Service` |
+## Connecting Port's GitHub exporter
+
+To make sure all of the properties (like url, readme etc..) come directly from Github in a seamless way, you can connect our GitHub exporter next [here](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/git/github/examples#mapping-repositories-and-issues) you can find more information about it.
+
