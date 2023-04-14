@@ -7,6 +7,7 @@ RUN apk update && \
     python3 \
     py3-pip \
     git \
+    openssh-client \
     && pip3 install cookiecutter && pip3 install six
 
 COPY entrypoint.sh /
