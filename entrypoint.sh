@@ -45,11 +45,11 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
     \"message\": \"Starting templating with cookiecutter 🍪\"
   }"
 
-echo "$port_user_inputs" | grep -o "cookiecutter[^ ]*" | sed 's/cookiecutter_//g' >> cookiecutter.json
+echo "$port_user_inputs" | jq 'with_entries(select(.key | startswith("cookiecutter_")) | .key |= sub("cookiecutter_"; "")) | { "cookiecutter": . }' >> cookiecutter.json
 
 cat cookiecutter.json
 
-cookiecutter $cookie_cutter_template --no-input
+cookiecutter $cookie_cutter_template --replay-file cookiecutter.json
 
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
@@ -68,7 +68,6 @@ git commit -m "Initial commit after scaffolding"
 git branch -M main
 git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
 git push -u origin main
-
 
 curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
   --header "Authorization: Bearer $access_token" \
