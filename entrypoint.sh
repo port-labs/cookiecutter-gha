@@ -47,7 +47,7 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
 
 echo "$port_user_inputs" | grep -o "cookiecutter[^ ]*" | sed 's/cookiecutter_//g' >> cookiecutter.json
 
-cat cookicutter.json
+cat cookiecutter.json
 
 cookiecutter $cookie_cutter_template --no-input
 
