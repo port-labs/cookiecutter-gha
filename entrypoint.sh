@@ -45,7 +45,9 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
     \"message\": \"Starting templating with cookiecutter 🍪\"
   }"
 
-echo "$port_user_inputs" | jq 'with_entries(select(.key | startswith("cookiecutter_")) | .key |= sub("cookiecutter_"; "")) | { "cookiecutter": . }' >> cookiecutter.json
+defaults=$(curl $cookie_cutter_template/master/cookiecutter.json)
+
+echo "$port_user_inputs" | jq 'with_entries(select(.key | startswith("cookiecutter_")) | .key |= sub("cookiecutter_"; "")) | . * '$defaults' | { "cookiecutter": . }' >> cookiecutter.json
 
 cat cookiecutter.json
 
