@@ -45,7 +45,9 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
     \"message\": \"Starting templating with cookiecutter 🍪\"
   }"
 
-echo "$port_user_inputs" | grep -o "cookiecutter[^ ]*" | sed 's/cookiecutter//g' >> cookiecutter.json
+echo "$port_user_inputs" | grep -o "cookiecutter[^ ]*" | sed 's/cookiecutter_//g' >> cookiecutter.json
+
+cat cookicutter.json
 
 cookiecutter $cookie_cutter_template --no-input
 
