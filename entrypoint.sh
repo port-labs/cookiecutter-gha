@@ -58,9 +58,9 @@ curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
 
 cd "$(ls -td -- */ | head -n 1)"
 
+git init
 git config user.name "GitHub Actions Bot"
 git config user.email "github-actions[bot]@users.noreply.github.com"
-git init
 git add .
 git commit -m "Initial commit after scaffolding"
 git branch -M main
