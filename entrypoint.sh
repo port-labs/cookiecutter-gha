@@ -49,7 +49,7 @@ cookie_cutter_template_path=$(echo $cookie_cutter_template | cut -d'/' -f4-)
 
 echo cookie_cutter_template_path: $cookie_cutter_template_path
 
-curl --compressed https://raw.githubusercontent.com/$cookie_cutter_template_path/master/cookiecutter.json -o defaults.json
+curl -H "Accept: application/vnd.github.v3.raw" https://api.github.com/repos/port-cookiecutter-example/golang/contents/cookiecutter.json | gzip > defaults.json.gz && gunzip defaults.json.gz
 
 cat defaults.json
 
