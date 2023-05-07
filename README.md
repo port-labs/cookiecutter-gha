@@ -21,6 +21,8 @@ In addition, as cookiecutter is an Open Source project you can make your own pro
 | cookiecutterTemplate  | The cookiecutter template to use to populate the repository                                                                   | Yes      |           |
 | portUserInputs        | Port user inputs to came from triggering the action                                                                           | Yes      |           |
 | portRunId             | Port run ID to came from triggering the action                                                                                | Yes      |           |
+| monorepoUrl           | If using scaffolding within a monorepo specify the URL here                                                                   | Yes      |           |
+| scaffoldDirectory     | Root folder to scaffold when using monorepo                                                                                   | Yes      |           |
 
 ## Quickstart - Scaffold Golang Template
 
@@ -136,6 +138,13 @@ jobs:
 ```
 6. Trigger the action from Port UI.
 ![gif](https://user-images.githubusercontent.com/51213812/230777057-081adf0c-f792-447e-bdec-35c99d73ba02.gif)
+
+## Monorepo
+If you would like to create a PR in a monorepo subfolder instead, you can fill out the following inputs
+```yml
+  monorepoUrl: <your-monorepo-url>
+  scaffoldDirectory: <directory to scaffold in i.e apps/> 
+```
 
 ## Connecting Port's GitHub exporter
 
