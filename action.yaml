@@ -1,7 +1,6 @@
 name: Port Cookiecutter Action
 description: GitHub action to create repositories templated with Cookiecutter with Port integration
 author: port-labs
-icon: https://uploads-ssl.webflow.com/622996415264e2107087774c/62299d67eda43ff64a5c45cd_logo.svg
 inputs:
   token:
     description: 'The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization (supporting only PATs at this time)'
@@ -31,6 +30,12 @@ inputs:
   portRunId:
     description: 'Port run ID to came from triggering the action'
     required: true
+  monorepoUrl:
+    description: 'The URL of the monorepo to create the new service in, specify it alongside scaffoldDirectory to open a new pull-request in the monorepo'
+    required: false
+  scaffoldDirectory:
+    description: 'The directory to scaffold the cookiecutter template in'
+    required: false
 runs:
   using: docker
   image: Dockerfile
