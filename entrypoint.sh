@@ -32,6 +32,16 @@ send_log() {
     }"
 }
 
+add_link() {
+  url=$1
+  curl --request PATCH --location "https://api.getport.io/v1/actions/runs/$port_run_id" \
+    --header "Authorization: Bearer $access_token" \
+    --header "Content-Type: application/json" \
+    --data "{
+      \"link\": \"$url\"
+    }"
+}
+
 create_repository() {
   curl -i -H "Authorization: token $github_token" \
        -d "{ \
@@ -96,11 +106,14 @@ push_to_repository() {
 
     echo "PR Payload: $PR_PAYLOAD"
 
-    curl -X POST \
+    pr_url=$(curl -X POST \
       -H "Authorization: token $github_token" \
       -H "Content-Type: application/json" \
       -d "$PR_PAYLOAD" \
-      "https://api.github.com/repos/$owner/$repo/pulls"
+      "https://api.github.com/repos/$owner/$repo/pulls" | jq -r '.html_url')
+
+    send_log "Opened a new PR in $pr_url 🚀"
+    add_link "$pr_url"
 
     else
       cd "$(ls -td -- */ | head -n 1)"
@@ -135,7 +148,7 @@ main() {
     create_repository
     send_log "Created a new repository at https://github.com/$org_name/$repository_name 🚀"
   else
-    send_log "Using monorepo: $monorepo_url 🏃"
+    send_log "Using monorepo scaffolding 🏃"
     clone_monorepo
     cd_to_scaffold_directory
     send_log "Cloned monorepo and created branch $branch_name 🚀"
@@ -146,10 +159,17 @@ main() {
   send_log "Pushing the template into the repository ⬆️"
   push_to_repository
 
-  send_log "Reporting to Port the new entity created https://github.com/$org_name/$repository_name 🚢"
+  url="https://github.com/$org_name/$repository_name"
+
+  send_log "Reporting to Port the new entity created 🚢"
+
   report_to_port
 
-  send_log "Finished! Visit https://github.com/$org_name/$repository_name 🏁✅"
+  if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
+    send_log "Finished! 🏁✅"
+  else
+    send_log "Finished! Visit $url 🏁✅"
+  fi
 }
 
 main
