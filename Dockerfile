@@ -8,6 +8,7 @@ RUN apk update && \
     py3-pip \
     git \
     openssh-client \
+    bash \
     && pip3 install cookiecutter && pip3 install six
 
 COPY *.sh /

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -71,14 +71,17 @@ apply_cookiecutter_template() {
 
   echo "🍪 Applying cookiecutter template $cookie_cutter_template with extra context $extra_context"
   # Convert extra context from JSON to arguments
-  args=$(echo "$extra_context" | jq -r 'to_entries[] | "\(.key)=\(.value)"')
+  args=()
+  for key in $(echo "$extra_context" | jq -r 'keys[]'); do
+      args+=("$key=$(echo "$extra_context" | jq -r ".$key")")
+  done
 
   # Call cookiecutter with extra context arguments
 
   echo "cookiecutter --no-input $cookie_cutter_template $args"
 
   # Call cookiecutter with extra context arguments
-  cookiecutter --no-input $cookie_cutter_template $args
+  cookiecutter --no-input $cookie_cutter_template "${args[@]}"
 }
 
 
