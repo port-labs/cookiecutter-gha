@@ -36,6 +36,9 @@ inputs:
   scaffoldDirectory:
     description: 'The directory to scaffold the cookiecutter template in'
     required: false
+  templateDirectory:
+    description: 'The directory to scaffold the cookiecutter template from'
+    required: false
 runs:
   using: docker
   image: Dockerfile

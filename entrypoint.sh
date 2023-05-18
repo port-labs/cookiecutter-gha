@@ -10,6 +10,7 @@ blueprint_identifier="$INPUT_BLUEPRINTIDENTIFIER"
 repository_name="$INPUT_REPOSITORYNAME"
 org_name="$INPUT_ORGANIZATIONNAME"
 cookie_cutter_template="$INPUT_COOKIECUTTERTEMPLATE"
+template_directory="$INPUT_TEMPLATEDIRECTORY"
 port_user_inputs="$INPUT_PORTUSERINPUTS"
 monorepo_url="$INPUT_MONOREPOURL"
 scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
@@ -81,7 +82,12 @@ apply_cookiecutter_template() {
   echo "cookiecutter --no-input $cookie_cutter_template $args"
 
   # Call cookiecutter with extra context arguments
-  cookiecutter --no-input $cookie_cutter_template "${args[@]}"
+
+  if [ -n "$template_directory" ]; then
+    cookiecutter --no-input $cookie_cutter_template --directory $template_directory "${args[@]}"
+  else
+    cookiecutter --no-input $cookie_cutter_template "${args[@]}"
+  fi
 }
 
 
