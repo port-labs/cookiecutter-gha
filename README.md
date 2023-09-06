@@ -12,7 +12,7 @@ In addition, as cookiecutter is an Open Source project you can make your own pro
 
 | Input                 | Description                                                                                                                   | Required | Default   |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------|----------|-----------|
-| token                 | The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization (supporting only PATs at this time) | Yes      |           |
+| token                 | The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization make sure to use [Fine-grained token](https://github.com/settings/tokens?type=beta) | Yes      |           |
 | portClientId          | The Port Client ID to use to authenticate with the API                                                                        | Yes      |           |
 | portClientSecret      | The Port Client Secret to use to authenticate with the API                                                                    | Yes      |           |
 | blueprintIdentifier   | The blueprint identifier to use to populate the Port                                                                          | Yes      | Service   |
