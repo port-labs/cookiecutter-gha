@@ -171,11 +171,12 @@ main() {
 
   url="https://github.com/$org_name/$repository_name"
 
-  send_log "Reporting to Port the new entity created 🚢"
-
   if [[ "$create_port_entity" == "true" ]]
   then
+    send_log "Reporting to Port the new entity created 🚢"
     report_to_port
+  else
+    send_log "Skipping reporting to Port the new entity created 🚢"
   fi
 
   if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
