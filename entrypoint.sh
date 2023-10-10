@@ -14,6 +14,7 @@ template_directory="$INPUT_TEMPLATEDIRECTORY"
 port_user_inputs="$INPUT_PORTUSERINPUTS"
 monorepo_url="$INPUT_MONOREPOURL"
 scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
+create_port_entity="$INPUT_CREATEPORTENTITY"
 branch_name="port_$port_run_id"
 
 get_access_token() {
@@ -172,7 +173,10 @@ main() {
 
   send_log "Reporting to Port the new entity created 🚢"
 
-  report_to_port
+  if [[ "$create_port_entity" == "true" ]]
+  then
+    report_to_port
+  fi
 
   if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
     send_log "Finished! 🏁✅"
