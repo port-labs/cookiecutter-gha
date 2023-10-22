@@ -23,7 +23,7 @@ In addition, as cookiecutter is an Open Source project you can make your own pro
 | portRunId             | Port run ID to came from triggering the action                                                                                | Yes      |              |
 | monorepoUrl           | If using scaffolding within a monorepo specify the URL here                                                                   | Yes      |              |
 | scaffoldDirectory     | Root folder to scaffold when using monorepo                                                                                   | Yes      |              |
-| githubURL             | GitHub url for self hosted version                                                                                            | Yes      |api.github.com|
+| githubURL             | GitHub url for self hosted version                                                                                            | Yes      |https://api.github.com|
 
 ## Quickstart - Scaffold Golang Template
 
