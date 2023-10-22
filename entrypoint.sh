@@ -15,6 +15,7 @@ port_user_inputs="$INPUT_PORTUSERINPUTS"
 monorepo_url="$INPUT_MONOREPOURL"
 scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
 branch_name="port_$port_run_id"
+git_url="$INPUT_GITHUBURL"
 
 get_access_token() {
   curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
@@ -48,7 +49,7 @@ create_repository() {
        -d "{ \
           \"name\": \"$repository_name\", \"private\": true
         }" \
-      https://api.github.com/orgs/$org_name/repos
+      $git_url/orgs/$org_name/repos
 }
 
 clone_monorepo() {
@@ -119,7 +120,7 @@ push_to_repository() {
       -H "Authorization: token $github_token" \
       -H "Content-Type: application/json" \
       -d "$PR_PAYLOAD" \
-      "https://api.github.com/repos/$owner/$repo/pulls" | jq -r '.html_url')
+      "$git_url/repos/$owner/$repo/pulls" | jq -r '.html_url')
 
     send_log "Opened a new PR in $pr_url 🚀"
     add_link "$pr_url"
