@@ -27,10 +27,10 @@ inputs:
   portUserInputs:
     description: 'Port user inputs to came from triggering the action'
     required: true
-  gitSelfHostedURL:
+  githubURL:
     description: 'Git URL for self hosted version. Default value is api.github.com'
     required: true
-    default: 'https://api.github.com/'
+    default: 'https://api.github.com'
   portRunId:
     description: 'Port run ID to came from triggering the action'
     required: true

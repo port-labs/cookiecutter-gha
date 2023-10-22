@@ -13,16 +13,17 @@ In addition, as cookiecutter is an Open Source project you can make your own pro
 | Input                 | Description                                                                                                                   | Required | Default   |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------|----------|-----------|
 | token                 | The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization make sure to use [Fine-grained token](https://github.com/settings/tokens?type=beta) | Yes      |           |
-| portClientId          | The Port Client ID to use to authenticate with the API                                                                        | Yes      |           |
-| portClientSecret      | The Port Client Secret to use to authenticate with the API                                                                    | Yes      |           |
-| blueprintIdentifier   | The blueprint identifier to use to populate the Port                                                                          | Yes      | Service   |
-| repositoryName        | The name of the repository to create                                                                                          | Yes      |           |
-| organizationName      | The name of the organization to create the repository in                                                                      | Yes      |           |
-| cookiecutterTemplate  | The cookiecutter template to use to populate the repository                                                                   | Yes      |           |
-| portUserInputs        | Port user inputs to came from triggering the action                                                                           | Yes      |           |
-| portRunId             | Port run ID to came from triggering the action                                                                                | Yes      |           |
-| monorepoUrl           | If using scaffolding within a monorepo specify the URL here                                                                   | Yes      |           |
-| scaffoldDirectory     | Root folder to scaffold when using monorepo                                                                                   | Yes      |           |
+| portClientId          | The Port Client ID to use to authenticate with the API                                                                        | Yes      |              |
+| portClientSecret      | The Port Client Secret to use to authenticate with the API                                                                    | Yes      |              |
+| blueprintIdentifier   | The blueprint identifier to use to populate the Port                                                                          | Yes      | Service      |
+| repositoryName        | The name of the repository to create                                                                                          | Yes      |              |
+| organizationName      | The name of the organization to create the repository in                                                                      | Yes      |              |
+| cookiecutterTemplate  | The cookiecutter template to use to populate the repository                                                                   | Yes      |              |
+| portUserInputs        | Port user inputs to came from triggering the action                                                                           | Yes      |              |
+| portRunId             | Port run ID to came from triggering the action                                                                                | Yes      |              |
+| monorepoUrl           | If using scaffolding within a monorepo specify the URL here                                                                   | Yes      |              |
+| scaffoldDirectory     | Root folder to scaffold when using monorepo                                                                                   | Yes      |              |
+| githubURL             | GitHub url for self hosted version                                                                                            | Yes      |api.github.com|
 
 ## Quickstart - Scaffold Golang Template
 

@@ -15,7 +15,7 @@ port_user_inputs="$INPUT_PORTUSERINPUTS"
 monorepo_url="$INPUT_MONOREPOURL"
 scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
 branch_name="port_$port_run_id"
-git_url="$INPUT_GITSELFHOSTEDURL"
+git_url="$INPUT_GITHUBURL"
 
 get_access_token() {
   curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
