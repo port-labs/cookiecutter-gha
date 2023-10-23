@@ -14,6 +14,7 @@ template_directory="$INPUT_TEMPLATEDIRECTORY"
 port_user_inputs="$INPUT_PORTUSERINPUTS"
 monorepo_url="$INPUT_MONOREPOURL"
 scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
+create_port_entity="$INPUT_CREATEPORTENTITY"
 branch_name="port_$port_run_id"
 git_url="$INPUT_GITHUBURL"
 
@@ -171,9 +172,13 @@ main() {
 
   url="https://github.com/$org_name/$repository_name"
 
-  send_log "Reporting to Port the new entity created 🚢"
-
-  report_to_port
+  if [[ "$create_port_entity" == "true" ]]
+  then
+    send_log "Reporting to Port the new entity created 🚢"
+    report_to_port
+  else
+    send_log "Skipping reporting to Port the new entity created 🚢"
+  fi
 
   if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
     send_log "Finished! 🏁✅"

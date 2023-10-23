@@ -24,6 +24,7 @@ In addition, as cookiecutter is an Open Source project you can make your own pro
 | monorepoUrl           | If using scaffolding within a monorepo specify the URL here                                                                   | Yes      |              |
 | scaffoldDirectory     | Root folder to scaffold when using monorepo                                                                                   | Yes      |              |
 | githubURL             | GitHub url for self hosted version                                                                                            | Yes      |https://api.github.com|
+| createPortEntity      | Whether should create port entity with the action or not. You can set this to `false` if you'd like to create the entry yourself with `port-labs/port-github-action`  | No  | true  |
 
 ## Quickstart - Scaffold Golang Template
 
