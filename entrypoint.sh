@@ -45,12 +45,26 @@ add_link() {
     }"
 }
 
-create_repository() {
-  curl -i -H "Authorization: token $github_token" \
+create_repository() {  
+  resp=$(curl -H "Authorization: token $github_token" -H "Accept: application/json" -H "Content-Type: application/json" $git_url/users/$org_name)
+
+  userType=$(jq -r '.type' <<< "$resp")
+    
+  if [ $userType == "User" ]; then
+    curl -X POST -i -H "Authorization: token $github_token" -H "X-GitHub-Api-Version: 2022-11-28" \
+       -d "{ \
+          \"name\": \"$repository_name\", \"private\": true
+        }" \
+      $git_url/user/repos
+  elif [ $userType == "Organization" ]; then
+    curl -i -H "Authorization: token $github_token" \
        -d "{ \
           \"name\": \"$repository_name\", \"private\": true
         }" \
       $git_url/orgs/$org_name/repos
+  else
+    echo "Invalid user type"
+  fi
 }
 
 clone_monorepo() {
