@@ -2,7 +2,7 @@
 FROM alpine:latest
 
 RUN apk update && \
-    apk add --no-cache jq=1.6 \
+    apk add --no-cache jq \
     curl \ 
     python3 \
     py3-pip \
