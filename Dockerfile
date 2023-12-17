@@ -1,11 +1,9 @@
 # Use the Alpine Linux base image
-FROM alpine:latest
+FROM python:3.11-alpine
 
 RUN apk update && \
     apk add --no-cache jq \
     curl \ 
-    python3 \
-    py3-pip \
     git \
     openssh-client \
     bash \
