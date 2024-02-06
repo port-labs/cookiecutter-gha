@@ -74,7 +74,7 @@ clone_monorepo() {
 }
 
 prepare_cookiecutter_extra_context() {
-  echo "$port_user_inputs" | jq -r 'with_entries(select(.key | startswith("cookiecutter_")) | .key |= sub("cookiecutter_"; ""))'
+  echo $port_user_inputs | jq -r 'with_entries(select(.key | startswith("cookiecutter_")) | .key |= sub("cookiecutter_"; ""))'
 }
 
 cd_to_scaffold_directory() {
@@ -167,7 +167,7 @@ report_to_port() {
 
 main() {
   access_token=$(get_access_token)
-
+  echo $port_user_inputs | jq -r '.'
   if [ -z "$monorepo_url" ] || [ -z "$scaffold_directory" ]; then
     send_log "Creating a new repository: $repository_name 🏃"
     create_repository
