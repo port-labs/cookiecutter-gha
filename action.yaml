@@ -18,6 +18,10 @@ inputs:
   repositoryName:
     description: 'The name of the repository to create'
     required: true
+  repositoryVisibility:
+    description: 'The visibility of the repository to create'
+    required: false
+    default: 'private'
   organizationName:
     description: 'The name of the organization to create the repository in'
     required: true

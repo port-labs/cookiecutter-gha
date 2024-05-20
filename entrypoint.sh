@@ -8,6 +8,7 @@ port_run_id="$INPUT_PORTRUNID"
 github_token="$INPUT_TOKEN"
 blueprint_identifier="$INPUT_BLUEPRINTIDENTIFIER"
 repository_name="$INPUT_REPOSITORYNAME"
+repository_visibility="$INPUT_REPOSITORYVISIBILITY"
 org_name="$INPUT_ORGANIZATIONNAME"
 cookie_cutter_template="$INPUT_COOKIECUTTERTEMPLATE"
 template_directory="$INPUT_TEMPLATEDIRECTORY"
@@ -19,7 +20,7 @@ branch_name="port_$port_run_id"
 git_url="$INPUT_GITHUBURL"
 
 get_access_token() {
-  curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
+  curl --silent --show-error --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
     \"clientId\": \"$port_client_id\",
     \"clientSecret\": \"$port_client_secret\"
   }" | jq -r '.accessToken'
@@ -27,17 +28,21 @@ get_access_token() {
 
 send_log() {
   message=$1
-  curl --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
-    --header "Authorization: Bearer $access_token" \
-    --header "Content-Type: application/json" \
-    --data "{
-      \"message\": \"$message\"
-    }"
+  if [[ -n $port_run_id ]]; then
+    curl --silent --show-error --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
+      --header "Authorization: Bearer $access_token" \
+      --header "Content-Type: application/json" \
+      --data "{
+        \"message\": \"$message\"
+      }"
+  else
+    echo "$message"
+  fi
 }
 
 add_link() {
   url=$1
-  curl --request PATCH --location "https://api.getport.io/v1/actions/runs/$port_run_id" \
+  curl --silent --show-error --request PATCH --location "https://api.getport.io/v1/actions/runs/$port_run_id" \
     --header "Authorization: Bearer $access_token" \
     --header "Content-Type: application/json" \
     --data "{
@@ -45,32 +50,34 @@ add_link() {
     }"
 }
 
-create_repository() {  
-  resp=$(curl -H "Authorization: token $github_token" -H "Accept: application/json" -H "Content-Type: application/json" $git_url/users/$org_name)
+create_repository() {
+  resp=$(curl --silent --show-error -H "Authorization: token $github_token" -H "Accept: application/json" -H "Content-Type: application/json" "$git_url/users/$org_name")
 
-  userType=$(jq -r '.type' <<< "$resp")
-    
-  if [ $userType == "User" ]; then
-    curl -X POST -i -H "Authorization: token $github_token" -H "X-GitHub-Api-Version: 2022-11-28" \
-       -d "{ \
-          \"name\": \"$repository_name\", \"private\": true
+  userType=$(jq -r '.type' <<<"$resp")
+
+  if [ "$userType" == "User" ]; then
+    curl --silent --show-error -X POST -i -H "Authorization: token $github_token" -H "X-GitHub-Api-Version: 2022-11-28" \
+      -d "{ \
+          \"name\": \"$repository_name\", \"$repository_visibility\": true
         }" \
-      $git_url/user/repos
-  elif [ $userType == "Organization" ]; then
-    curl -i -H "Authorization: token $github_token" \
-       -d "{ \
-          \"name\": \"$repository_name\", \"private\": true
+      "$git_url/user/repos"
+  elif [ "$userType" == "Organization" ]; then
+    curl --silent --show-error -i -H "Authorization: token $github_token" \
+      -d "{ \
+          \"name\": \"$repository_name\", \"$repository_visibility\": true
         }" \
-      $git_url/orgs/$org_name/repos
+      "$git_url/orgs/$org_name/repos"
   else
-    echo "Invalid user type"
+    echo "Invalid user type: $userType"
+    echo "$resp"
+    exit 1
   fi
 }
 
 clone_monorepo() {
-  git clone $monorepo_url monorepo
+  git clone "$monorepo_url" monorepo
   cd monorepo
-  git checkout -b $branch_name
+  git checkout -b "$branch_name"
 }
 
 prepare_cookiecutter_extra_context() {
@@ -79,7 +86,7 @@ prepare_cookiecutter_extra_context() {
 
 cd_to_scaffold_directory() {
   if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
-    cd $scaffold_directory
+    cd "$scaffold_directory"
   fi
 }
 
@@ -90,22 +97,17 @@ apply_cookiecutter_template() {
   # Convert extra context from JSON to arguments
   args=()
   for key in $(echo "$extra_context" | jq -r 'keys[]'); do
-      args+=("$key=$(echo "$extra_context" | jq -r ".$key")")
+    args+=("$key=$(echo "$extra_context" | jq -r ".$key")")
   done
 
   # Call cookiecutter with extra context arguments
-
-  echo "cookiecutter --no-input $cookie_cutter_template $args"
-
-  # Call cookiecutter with extra context arguments
-
+  echo "cookiecutter --no-input $cookie_cutter_template ${args[*]}"
   if [ -n "$template_directory" ]; then
-    cookiecutter --no-input $cookie_cutter_template --directory $template_directory "${args[@]}"
+    cookiecutter --no-input "$cookie_cutter_template" --directory "$template_directory" "${args[@]}"
   else
-    cookiecutter --no-input $cookie_cutter_template "${args[@]}"
+    cookiecutter --no-input "$cookie_cutter_template" "${args[@]}"
   fi
 }
-
 
 push_to_repository() {
   if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
@@ -113,9 +115,9 @@ push_to_repository() {
     git config user.email "github-actions[bot]@users.noreply.github.com"
     git add .
     git commit -m "Scaffolded project in $scaffold_directory"
-    git push -u origin $branch_name
+    git push -u origin "$branch_name"
 
-    send_log "Creating pull request to merge $branch_name into main 🚢"
+    send_log "Creating pull request to merge $branch_name into master 🚢"
 
     owner=$(echo "$monorepo_url" | awk -F'/' '{print $4}')
     repo=$(echo "$monorepo_url" | awk -F'/' '{print $5}')
@@ -123,7 +125,7 @@ push_to_repository() {
     echo "Owner: $owner"
     echo "Repo: $repo"
 
-    PR_PAYLOAD=$(jq -n --arg title "Scaffolded project in $repo" --arg head "$branch_name" --arg base "main" '{
+    PR_PAYLOAD=$(jq -n --arg title "Scaffolded project in $repo" --arg head "$branch_name" --arg base "master" '{
       "title": $title,
       "head": $head,
       "base": $base
@@ -131,7 +133,7 @@ push_to_repository() {
 
     echo "PR Payload: $PR_PAYLOAD"
 
-    pr_url=$(curl -X POST \
+    pr_url=$(curl --silent --show-error -X POST \
       -H "Authorization: token $github_token" \
       -H "Content-Type: application/json" \
       -d "$PR_PAYLOAD" \
@@ -140,22 +142,21 @@ push_to_repository() {
     send_log "Opened a new PR in $pr_url 🚀"
     add_link "$pr_url"
 
-    else
-      cd "$(ls -td -- */ | head -n 1)"
-      git init
-      git config user.name "GitHub Actions Bot"
-      git config user.email "github-actions[bot]@users.noreply.github.com"
-      git add .
-      git commit -m "Initial commit after scaffolding"
-      git branch -M main
-      git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
-      git push -u origin main
+  else
+    cd "$(ls -td -- */ | head -n 1)"
+    git init
+    git config user.name "GitHub Actions Bot"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git add .
+    git commit -m "Initial commit after scaffolding"
+    git branch -M master
+    git remote add origin "https://oauth2:$github_token@github.com/$org_name/$repository_name.git"
+    git push -u origin master
   fi
 }
 
-
 report_to_port() {
-  curl --location "https://api.getport.io/v1/blueprints/$blueprint_identifier/entities?run_id=$port_run_id" \
+  curl --silent --show-error --location "https://api.getport.io/v1/blueprints/$blueprint_identifier/entities?run_id=$port_run_id" \
     --header "Authorization: Bearer $access_token" \
     --header "Content-Type: application/json" \
     --data "{
@@ -186,8 +187,7 @@ main() {
 
   url="https://github.com/$org_name/$repository_name"
 
-  if [[ "$create_port_entity" == "true" ]]
-  then
+  if [[ "$create_port_entity" == "true" ]]; then
     send_log "Reporting to Port the new entity created 🚢"
     report_to_port
   else
