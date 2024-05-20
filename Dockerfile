@@ -3,7 +3,7 @@ FROM python:3.11-alpine
 
 RUN apk update && \
     apk add --no-cache jq \
-    curl \ 
+    curl \
     git \
     openssh-client \
     bash \
