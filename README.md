@@ -164,7 +164,7 @@ If you would like to create a PR in a monorepo subfolder instead, you can fill o
 
 ## Connecting Port's GitHub exporter
 
-To make sure all of the properties (like url, readme etc..) come directly from Github in a seamless way, you can connect our GitHub exporter
+To make sure all of the properties (like url, readme etc..) come directly from GitHub in a seamless way, you can connect our GitHub exporter
 next [here](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/git/github/examples#mapping-repositories-and-issues)
 you can find more information about it.
 

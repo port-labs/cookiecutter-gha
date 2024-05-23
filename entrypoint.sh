@@ -91,7 +91,10 @@ cd_to_scaffold_directory() {
 }
 
 apply_cookiecutter_template() {
-  extra_context=$(prepare_cookiecutter_extra_context)
+  extra_context=$(prepare_cookiecutter_extra_context) || (
+    echo "Error parsing cookiecutter extra context: $port_user_inputs" >&2
+    exit 1
+  )
 
   echo "🍪 Applying cookiecutter template $cookie_cutter_template with extra context $extra_context"
   # Convert extra context from JSON to arguments
