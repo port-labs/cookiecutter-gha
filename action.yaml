@@ -51,6 +51,9 @@ inputs:
     description: 'Whether to create a Port entity for the repository'
     required: false
     default: "true"
+outputs:
+  repoURL:
+    description: 'The URL of the created repository'
 runs:
   using: docker
   image: Dockerfile

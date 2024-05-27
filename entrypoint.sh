@@ -18,6 +18,7 @@ scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
 create_port_entity="$INPUT_CREATEPORTENTITY"
 branch_name="port_$port_run_id"
 git_url="$INPUT_GITHUBURL"
+repo_url="https://github.com/$org_name/$repository_name"
 
 get_access_token() {
   curl --silent --show-error --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
@@ -27,7 +28,7 @@ get_access_token() {
 }
 
 send_log() {
-  message=$1
+  local message=$1
   if [[ -n $port_run_id ]]; then
     curl --silent --show-error --location "https://api.getport.io/v1/actions/runs/$port_run_id/logs" \
       --header "Authorization: Bearer $access_token" \
@@ -41,12 +42,12 @@ send_log() {
 }
 
 add_link() {
-  url=$1
+  local link_url=$1
   curl --silent --show-error --request PATCH --location "https://api.getport.io/v1/actions/runs/$port_run_id" \
     --header "Authorization: Bearer $access_token" \
     --header "Content-Type: application/json" \
     --data "{
-      \"link\": \"$url\"
+      \"link\": \"$link_url\"
     }"
 }
 
@@ -155,6 +156,8 @@ push_to_repository() {
     git branch -M master
     git remote add origin "https://oauth2:$github_token@github.com/$org_name/$repository_name.git"
     git push -u origin master
+    # add_link would be usable if not overwriting the existing links
+    # add_link "$repo_url"
   fi
 }
 
@@ -175,7 +178,7 @@ main() {
   if [ -z "$monorepo_url" ] || [ -z "$scaffold_directory" ]; then
     send_log "Creating a new repository: $repository_name 🏃"
     create_repository
-    send_log "Created a new repository at https://github.com/$org_name/$repository_name 🚀"
+    send_log "New repository created: $repo_url 🚀"
   else
     send_log "Using monorepo scaffolding 🏃"
     clone_monorepo
@@ -185,10 +188,8 @@ main() {
 
   send_log "Starting templating with cookiecutter 🍪"
   apply_cookiecutter_template
-  send_log "Pushing the template into the repository ⬆️"
+  send_log "Pushing the template into the repository."
   push_to_repository
-
-  url="https://github.com/$org_name/$repository_name"
 
   if [[ "$create_port_entity" == "true" ]]; then
     send_log "Reporting to Port the new entity created 🚢"
@@ -200,8 +201,9 @@ main() {
   if [ -n "$monorepo_url" ] && [ -n "$scaffold_directory" ]; then
     send_log "Finished! 🏁✅"
   else
-    send_log "Finished! Visit $url 🏁✅"
+    send_log "Finished! Visit $repo_url 🏁✅"
   fi
+  echo "repoURL=$repo_url" >>"$GITHUB_OUTPUT"
 }
 
 main
