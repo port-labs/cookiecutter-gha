@@ -74,11 +74,19 @@ Follow these steps to get started with the Golang template
 
 
 ```json
-[
-  {
-    "identifier": "scaffold",
-    "title": "Scaffold Golang Microservice",
+{
+  "identifier": "scaffold",
+  "title": "Scaffold Golang Microservice",
     "icon": "Git",
+  "invocationMethod": {
+    "type": "GITHUB",
+    "org": "port-cookiecutter-example",
+    "repo": "gha-templater",
+    "workflow": "scaffold-golang.yml"
+  },
+  "trigger": {
+    "type": "self-service",
+    "operation": "CREATE",
     "userInputs": {
       "properties": {
         "name": {
@@ -93,50 +101,34 @@ Follow these steps to get started with the Golang template
       "required": [
         "name"
       ]
-    },
-    "invocationMethod": {
-      "type": "GITHUB",
-      "org": "port-cookiecutter-example",
-      "repo": "gha-templater",
-      "workflow": "scaffold-golang.yml",
-      "omitUserInputs": true
-    },
-    "trigger": "CREATE",
-    "description": "Scaffolding a new Microservice from a set of templates using Cookiecutter"
+    }
   }
-]
+}
 ```
 5. Create a workflow file under .github/workflows/scaffold-golang.yml with the following content:
 ```yml
 on:
-  workflow_dispatch:
-    inputs:
-      port_payload:
-        required: true
-        description: "Port's payload, including details for who triggered the action and general context (blueprint, run id, etc...)"
-        type: string
-    secrets: 
-      ORG_TOKEN: 
-        required: true
-      PORT_CLIENT_ID:
-        required: true
-      PORT_CLIENT_SECRET:
-        required: true
+    workflow_dispatch:
+      inputs:
+        port_payload:
+          required: true
+          description: "Port's payload, including details for who triggered the action and general context (blueprint, run id, etc...)"
+          type: string
 jobs: 
-  scaffold:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: port-labs/cookiecutter-gha@v1.1
-        with:
-          portClientId: ${{ secrets.PORT_CLIENT_ID }}
-          portClientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
-          token: ${{ secrets.ORG_TOKEN }}
-          portRunId: ${{ fromJson(inputs.port_payload).context.runId }}
-          repositoryName: ${{ fromJson(inputs.port_payload).payload.properties.name }}
-          portUserInputs: ${{ toJson(fromJson(inputs.port_payload).payload.properties) }} 
-          cookiecutterTemplate: https://github.com/lacion/cookiecutter-golang
-          blueprintIdentifier: 'microservice'
-          organizationName: INSERT_ORG_NAME
+    scaffold:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: port-labs/cookiecutter-gha@v1.1
+          with:
+            portClientId: ${{ secrets.PORT_CLIENT_ID }}
+            portClientSecret: ${{ secrets.PORT_CLIENT_SECRET }}
+            token: ${{ secrets.ORG_TOKEN }}
+            portRunId: ${{ fromJson(inputs.port_payload).context.runId }}
+            repositoryName: ${{ fromJson(inputs.port_payload).payload.properties.name }}
+            portUserInputs: ${{ toJson(fromJson(inputs.port_payload).payload.properties) }} 
+            cookiecutterTemplate: https://github.com/lacion/cookiecutter-golang
+            blueprintIdentifier: 'microservice'
+            organizationName: INSERT_ORG_NAME
 ```
 6. Trigger the action from Port UI.
 ![gif](https://user-images.githubusercontent.com/51213812/230777057-081adf0c-f792-447e-bdec-35c99d73ba02.gif)

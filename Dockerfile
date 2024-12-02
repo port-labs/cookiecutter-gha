@@ -7,7 +7,8 @@ RUN apk update && \
     git \
     openssh-client \
     bash \
-    && pip3 install cookiecutter && pip3 install six
+    py3-pip && \
+    pip install --no-cache-dir cookiecutter six
 
 COPY *.sh /
 RUN chmod +x /*.sh
