@@ -1,18 +1,18 @@
-<img align="right" width="100" height="74" src="https://user-images.githubusercontent.com/8277210/183290025-d7b24277-dfb4-4ce1-bece-7fe0ecd5efd4.svg" />
+<img align="right" width="100" height="74" src=https://cdn.prod.website-files.com/622996415264e2107087774c/65b09e2a73ab4ac42ad0c139_logo.svg />
 
 # Scaffold Action
 
 [![Slack](https://img.shields.io/badge/Slack-4A154B?style=for-the-badge&logo=slack&logoColor=white)](https://join.slack.com/t/devex-community/shared_invite/zt-1bmf5621e-GGfuJdMPK2D8UN58qL4E_g)
 
-This GitHub action allows you to quickly scaffold repositories using any selected [Cookiecutter Template](https://www.cookiecutter.io/templates) via Port Actions.
+Use Port automations to quickly scaffold repositories using  [Cookiecutter templates](https://www.cookiecutter.io/templates) via GitHub Actions.
 
-In addition, as cookiecutter is an Open Source project you can make your own project, learn more about it [here](https://cookiecutter.readthedocs.io/en/2.0.2/tutorials.html#create-your-very-own-cookiecutter-project-template)
+[Cookiecutter](https://www.cookiecutter.io/) is an open source templating library for creating boilerplate for projects in any programming language. In addition to selecting an existing template, you can also [build your own.](https://cookiecutter.readthedocs.io/en/2.0.2/tutorials.html#create-your-very-own-cookiecutter-project-template)
 
 ## Inputs
 
 | Input                 | Description                                                                                                                   | Required | Default   |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------|----------|-----------|
-| token                 | The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization make sure to use [Fine-grained token](https://github.com/settings/tokens?type=beta) | Yes      |           |
+| token                 | The GitHub Token to use to authenticate with the API with permissions to create repositories within the organization. Make sure to use [fine-grained tokens.](https://github.com/settings/personal-access-tokens) | Yes      |           |
 | portClientId          | The Port Client ID to use to authenticate with the API                                                                        | Yes      |              |
 | portClientSecret      | The Port Client Secret to use to authenticate with the API                                                                    | Yes      |              |
 | blueprintIdentifier   | The blueprint identifier to use to populate the Port                                                                          | Yes      | Service      |
@@ -28,16 +28,16 @@ In addition, as cookiecutter is an Open Source project you can make your own pro
 
 ## Quickstart - Scaffold Golang Template
 
-Follow these steps to get started with the Golang template
+Follow these steps to get started with the [Cookiecutter Golang template.](https://github.com/lacion/cookiecutter-golang)
 
 1. Create the following GitHub action secrets
 * `ORG_TOKEN` - a PAT (Personal Access Token) with permissions to create repositories
 * `PORT_CLIENT_ID` - Port Client ID [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token)
 * `PORT_CLIENT_SECRET` - Port Client Secret [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token) 
 
-2. Install the Ports GitHub app from [here](https://github.com/apps/getport-io/installations/new).
+2. Install the [Port GitHub app](https://github.com/apps/getport-io/installations/new).
 3. Create a blueprint at Port with the following properties:
->**Note** Keep in mind this can be any blueprint you would like and this is just an example
+>**Note** This can be any blueprint you would like -- this is just an example
 ```json
 {
   "identifier": "microservice",
@@ -131,7 +131,7 @@ jobs:
             organizationName: INSERT_ORG_NAME
 ```
 6. Trigger the action from Port UI.
-![gif](https://user-images.githubusercontent.com/51213812/230777057-081adf0c-f792-447e-bdec-35c99d73ba02.gif)
+<img src="https://docs.port.io/img/guides/scaffoldSelfServiceAfterCreation.png">
 
 ## Monorepo
 If you would like to create a PR in a monorepo subfolder instead, you can fill out the following inputs
@@ -140,7 +140,7 @@ If you would like to create a PR in a monorepo subfolder instead, you can fill o
   scaffoldDirectory: <directory to scaffold in i.e apps/> 
 ```
 
-## Connecting Port's GitHub exporter
+## Connecting Port's GitHub integration
 
-To make sure all of the properties (like url, readme etc..) come directly from Github in a seamless way, you can connect our GitHub exporter next [here](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/git/github/examples#mapping-repositories-and-issues) you can find more information about it.
+To automatically collect and update all of the properties (e.g. pull requests, README updates, issues, etc) in your Port software catalog from your GitHub repositories after they're scaffolded, you can [connect Port to GitHub](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/git/github/examples#mapping-repositories-and-issues).
 
