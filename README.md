@@ -32,8 +32,8 @@ Follow these steps to get started with the [Cookiecutter Golang template.](https
 
 1. Create the following GitHub action secrets
 * `ORG_TOKEN` - a PAT (Personal Access Token) with permissions to create repositories
-* `PORT_CLIENT_ID` - Port Client ID [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token)
-* `PORT_CLIENT_SECRET` - Port Client Secret [learn more](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token) 
+* `PORT_CLIENT_ID` - Port Client ID [learn more](https://docs.port.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token)
+* `PORT_CLIENT_SECRET` - Port Client Secret [learn more](https://docs.port.io/build-your-software-catalog/sync-data-to-catalog/api/#get-api-token) 
 
 2. Install the [Port GitHub app](https://github.com/apps/getport-io/installations/new).
 3. Create a blueprint at Port with the following properties:
@@ -142,5 +142,5 @@ If you would like to create a PR in a monorepo subfolder instead, you can fill o
 
 ## Connecting Port's GitHub integration
 
-To automatically collect and update all of the properties (e.g. pull requests, README updates, issues, etc) in your Port software catalog from your GitHub repositories after they're scaffolded, you can [connect Port to GitHub](https://docs.getport.io/build-your-software-catalog/sync-data-to-catalog/git/github/examples#mapping-repositories-and-issues).
+To automatically collect and update all of the properties (e.g. pull requests, README updates, issues, etc) in your Port software catalog from your GitHub repositories after they're scaffolded, you can [connect Port to GitHub](https://docs.port.io/build-your-software-catalog/sync-data-to-catalog/git/github/examples#mapping-repositories-and-issues).
 
