@@ -1,5 +1,5 @@
 name: Port Cookiecutter Action
-description: GitHub action to create repositories templated with Cookiecutter with Port integration
+description: Use Port to scaffold repositories using Cookiecutter.io templates
 author: port-labs
 inputs:
   token:
