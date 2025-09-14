@@ -8,6 +8,7 @@ port_run_id="$INPUT_PORTRUNID"
 github_token="$INPUT_TOKEN"
 blueprint_identifier="$INPUT_BLUEPRINTIDENTIFIER"
 repository_name="$INPUT_REPOSITORYNAME"
+repository_type="$INPUT_REPOSITORYTYPE"
 org_name="$INPUT_ORGANIZATIONNAME"
 cookie_cutter_template="$INPUT_COOKIECUTTERTEMPLATE"
 template_directory="$INPUT_TEMPLATEDIRECTORY"
@@ -16,7 +17,14 @@ monorepo_url="$INPUT_MONOREPOURL"
 scaffold_directory="$INPUT_SCAFFOLDDIRECTORY"
 create_port_entity="$INPUT_CREATEPORTENTITY"
 branch_name="port_$port_run_id"
+git_api="$INPUT_GITHUBAPI"
 git_url="$INPUT_GITHUBURL"
+
+# Validate repository_type
+if [ "$repository_type" != "private" ] && [ "$repository_type" != "public" ]; then
+  echo "Error: repositoryType input must be either 'private' or 'public'. Got '$repository_type' instead."
+  exit 1
+fi
 
 get_access_token() {
   curl -s --location --request POST 'https://api.getport.io/v1/auth/access_token' --header 'Content-Type: application/json' --data-raw "{
@@ -46,22 +54,22 @@ add_link() {
 }
 
 create_repository() {  
-  resp=$(curl -H "Authorization: token $github_token" -H "Accept: application/json" -H "Content-Type: application/json" $git_url/users/$org_name)
+  resp=$(curl -H "Authorization: token $github_token" -H "Accept: application/json" -H "Content-Type: application/json" $git_api/users/$org_name)
 
   userType=$(jq -r '.type' <<< "$resp")
     
   if [ $userType == "User" ]; then
     curl -X POST -i -H "Authorization: token $github_token" -H "X-GitHub-Api-Version: 2022-11-28" \
        -d "{ \
-          \"name\": \"$repository_name\", \"private\": true
+          \"name\": \"$repository_name\", \"$repository_type\": true
         }" \
-      $git_url/user/repos
+      $git_api/user/repos
   elif [ $userType == "Organization" ]; then
     curl -i -H "Authorization: token $github_token" \
        -d "{ \
-          \"name\": \"$repository_name\", \"private\": true
+          \"name\": \"$repository_name\", \"$repository_type\": true
         }" \
-      $git_url/orgs/$org_name/repos
+      $git_api/orgs/$org_name/repos
   else
     echo "Invalid user type"
   fi
@@ -135,21 +143,22 @@ push_to_repository() {
       -H "Authorization: token $github_token" \
       -H "Content-Type: application/json" \
       -d "$PR_PAYLOAD" \
-      "$git_url/repos/$owner/$repo/pulls" | jq -r '.html_url')
+      "$git_api/repos/$owner/$repo/pulls" | jq -r '.html_url')
 
     send_log "Opened a new PR in $pr_url 🚀"
     add_link "$pr_url"
 
-    else
-      cd "$(ls -td -- */ | head -n 1)"
-      git init
-      git config user.name "GitHub Actions Bot"
-      git config user.email "github-actions[bot]@users.noreply.github.com"
-      git add .
-      git commit -m "Initial commit after scaffolding"
-      git branch -M main
-      git remote add origin https://oauth2:$github_token@github.com/$org_name/$repository_name.git
-      git push -u origin main
+  else
+    git_url_clean=$(echo $git_url | sed 's|^https://||')
+    cd "$(ls -td -- */ | head -n 1)"
+    git init
+    git config user.name "GitHub Actions Bot"
+    git config user.email "github-actions[bot]@users.noreply.github.com"
+    git add .
+    git commit -m "Initial commit after scaffolding"
+    git branch -M main
+    git remote add origin https://oauth2:$github_token@$git_url_clean/$org_name/$repository_name.git
+    git push -u origin main
   fi
 }
 
@@ -171,7 +180,7 @@ main() {
   if [ -z "$monorepo_url" ] || [ -z "$scaffold_directory" ]; then
     send_log "Creating a new repository: $repository_name 🏃"
     create_repository
-    send_log "Created a new repository at https://github.com/$org_name/$repository_name 🚀"
+    send_log "Created a new repository at $git_url/$org_name/$repository_name 🚀"
   else
     send_log "Using monorepo scaffolding 🏃"
     clone_monorepo
@@ -184,7 +193,7 @@ main() {
   send_log "Pushing the template into the repository ⬆️"
   push_to_repository
 
-  url="https://github.com/$org_name/$repository_name"
+  url="$git_url/$org_name/$repository_name"
 
   if [[ "$create_port_entity" == "true" ]]
   then

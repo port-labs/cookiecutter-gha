@@ -18,6 +18,10 @@ inputs:
   repositoryName:
     description: 'The name of the repository to create'
     required: true
+  repositoryType:
+    description: 'The type of repository, public or private'
+    required: true
+    default: 'private'
   organizationName:
     description: 'The name of the organization to create the repository in'
     required: true
@@ -28,9 +32,13 @@ inputs:
     description: 'Port user inputs to came from triggering the action'
     required: true
   githubURL:
-    description: 'Git URL for self hosted version. Default value is api.github.com'
+    description: 'GitHub URL. Default value is taken from context'
     required: true
-    default: 'https://api.github.com'
+    default: ${{ github.server_url }}
+  githubAPI:
+    description: 'GitHub API URL. Default value is taken from context'
+    required: true
+    default: ${{ github.api_url }}
   portRunId:
     description: 'Port run ID to came from triggering the action'
     required: true
